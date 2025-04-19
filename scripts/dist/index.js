@@ -111,15 +111,26 @@ function IDSearchNotion(todoistID) {
 }
 function notionActivePages() {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryResponse = yield notionApi.databases.query({
-            database_id: databaseId,
-            filter: {
+        const todayISO = new Date().toISOString().split("T")[0];
+const queryResponse = yield notionApi.databases.query({
+    database_id: databaseId,
+    filter: {
+        and: [
+            {
                 property: 'Status',
                 checkbox: {
                     equals: false,
                 },
             },
-        });
+            {
+                property: 'Due',
+                date: {
+                    on_or_after: todayISO
+                }
+            }
+        ]
+    },
+});
         return queryResponse.results;
     });
 }
@@ -415,7 +426,8 @@ function checkNotionIncompletion(taskList) {
 }
 function notionUpToDateCheck(lastCheckedTodoistIndex) {
     return __awaiter(this, void 0, void 0, function* () {
-        const taskList = yield todoistApi.getTasks();
+        const todayISO = new Date().toISOString().split("T")[0];
+const taskList = yield todoistApi.getTasks({ filter: `due on: ${todayISO}` });
         lastCheckedTodoistIndex = yield checkTodoistCompletion(lastCheckedTodoistIndex, taskList);
         const taskListLength = taskList.length;
         if (taskListLength > 0) {
@@ -534,7 +546,7 @@ function intervalStart() {
             notionUpToDateCheck(latestNotionIndex)
                 .then(value => (latestNotionIndex = value))
                 .then(todoistManualUpdates);
-        }, 10000);
+        }, 60000);
     });
 }
 const IDs = {
