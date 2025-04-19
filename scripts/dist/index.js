@@ -427,7 +427,7 @@ function checkNotionIncompletion(taskList) {
 function notionUpToDateCheck(lastCheckedTodoistIndex) {
     return __awaiter(this, void 0, void 0, function* () {
         const todayISO = new Date().toISOString().split("T")[0];
-const taskList = yield todoistApi.getTasks({ filter: `due on: ${todayISO}` });
+const taskList = yield todoistApi.getTasks({ filter: 'today' });
         lastCheckedTodoistIndex = yield checkTodoistCompletion(lastCheckedTodoistIndex, taskList);
         const taskListLength = taskList.length;
         if (taskListLength > 0) {
