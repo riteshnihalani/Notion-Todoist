@@ -198,6 +198,7 @@ function newNotionPage(todoistTask) {
 }
 function updateNotionPage(notionPageID, todoistTask) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log('Sending to Notion: Status =', Boolean(todoistTask.isCompleted));
         const updatedNotionPage = yield notionApi.pages.update({
             page_id: notionPageID,
             properties: {
@@ -345,8 +346,10 @@ function checkTodoistCompletion() {
             const todoistID = IDs.todoistTaskIDs[i];
             try {
                 const todoistTask = yield todoistApi.getTask(todoistID);
-                if (todoistTask.isCompleted) {
-                    yield updateNotionPage(IDs.notionPageIDs[i], todoistTask);
+                console.log(`Todoist task ${todoistID} completed:`, todoistTask.isCompleted);
+            if (todoistTask.isCompleted) {
+                    console.log(`Updating Notion page ${IDs.notionPageIDs[i]} with completed status`);
+                yield updateNotionPage(IDs.notionPageIDs[i], todoistTask);
                 }
             } catch (err) {
                 console.error(`Error checking completion for ${todoistID}: ${err.responseData || err.message}`);
