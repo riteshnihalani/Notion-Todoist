@@ -527,10 +527,10 @@ function intervalStart() {
         // index tracking removed
         
         setInterval(() => {
-            todoistUpToDateCheck(latestTodoistIndex)
+            todoistUpToDateCheck(0)
                 .then(value => (latestTodoistIndex = value))
                 .then(notionManualUpdates);
-            notionUpToDateCheck(latestNotionIndex)
+            notionUpToDateCheck(0)
                 .then(value => (latestNotionIndex = value))
                 .then(todoistManualUpdates);
         }, 10000);
